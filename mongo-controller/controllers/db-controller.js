@@ -13,7 +13,6 @@ export const saveSymbol = async (request, response) => {
 
     //console.log(request.body)
     const symbols = request.body
-
     const bulk = Symbol.collection.initializeUnorderedBulkOp()
     symbols.forEach(element => {
 
@@ -28,9 +27,9 @@ export const saveSymbol = async (request, response) => {
                 quoteVolume
             }
         }
-        bulk.find({ symbol: element.symbol }).upsert().update( symbolData )
+        bulk.find({ symbol: symbol }).upsert().update( symbolData )
     })
-    bulk.execute()
+    await bulk.execute()
 
     console.timeEnd()
     response.end()
