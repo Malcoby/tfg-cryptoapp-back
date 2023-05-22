@@ -7,14 +7,9 @@ export const updateDB = async () => {
 
     const symbols = await getSymbolsData()
 
-    console.log('simbolos' + symbols.length)
-
-    petition_http.open('PUT', 'http://localhost:1818/saveSymbol', false)
+    petition_http.open('PUT', 'http://localhost:1818/saveSymbol')
     petition_http.setRequestHeader('Content-Type', 'application/json')
     petition_http.send(symbols)
-
-    console.log('fin')
-    return
 
     // petition_http.onload = () => {
     //     if (petition_http.readyState == 4 && petition_http.status == 200) {

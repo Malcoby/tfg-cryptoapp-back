@@ -11,6 +11,8 @@ export const saveSymbol = async (request, response) => {
 
     console.time()
 
+    Symbol.collection.drop()
+
     //console.log(request.body)
     const symbols = request.body
     const bulk = Symbol.collection.initializeUnorderedBulkOp()
@@ -19,15 +21,13 @@ export const saveSymbol = async (request, response) => {
         const { symbol, priceChangePercent, lastPrice, volume, quoteVolume } = element
 
         const symbolData = {
-            $set: {
-                symbol,
-                priceChangePercent,
-                lastPrice,
-                volume,
-                quoteVolume
-            }
+            symbol,
+            priceChangePercent,
+            lastPrice,
+            volume,
+            quoteVolume
         }
-        bulk.find({ symbol: symbol }).upsert().update( symbolData )
+        bulk.insert(symbolData)
     })
     await bulk.execute()
 

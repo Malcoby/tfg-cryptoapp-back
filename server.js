@@ -10,9 +10,10 @@ const main = async () => {
     app.listen(1818, () => {
         console.log('\n-- Server Running at http://localhost:1818')
     })
-    setInterval(async () => {
-        await updateDB()
-    }, 3000 )
+    updateDB()
+    // setInterval(async () => {
+    //     await updateDB()
+    // }, 3000 )
 }
 
 const app = express()
