@@ -35,10 +35,6 @@ export const saveSymbol = async (request, response) => {
     response.end()
 }
 
-
-
-
-
 export const getUsers = async (request, response) => {
 
     const users = await User.find()

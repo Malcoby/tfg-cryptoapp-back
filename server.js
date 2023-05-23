@@ -4,16 +4,19 @@ import { updateDB } from './services/index.js'
 import cors from 'cors'
 import express from 'express'
 
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 const main = async () => {
 
     await connect()
     app.listen(1818, () => {
         console.log('\n-- Server Running at http://localhost:1818')
     })
-    updateDB()
-    // setInterval(async () => {
-    //     await updateDB()
-    // }, 3000 )
+
+    setInterval(async () => {
+        await updateDB()
+    }, 3000 )
 }
 
 const app = express()
