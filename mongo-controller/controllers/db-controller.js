@@ -3,8 +3,20 @@ import User from '../models/user.js'
 
 export const getSymbols = async (request, response) => {
 
-    const symbols = await Symbol.find()
+    let attempts = 0
+    let symbols = null
+
+    while (!symbols && attempts++ < 3) {
+
+        try {
+            symbols = await Symbol.find()
+        } catch {
+            setTimeout(() => {}, 100)
+        }
+    }
+
     response.json(symbols)
+    response.end()
 }
 
 export const saveSymbol = async (request, response) => {

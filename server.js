@@ -11,12 +11,12 @@ const main = async () => {
 
     await connect()
     app.listen(1818, () => {
-        console.log('\n-- Server Running at http://localhost:1818')
+        console.log('\n\n-- Server Running at http://localhost:1818\n')
     })
 
     setInterval(async () => {
         await updateDB()
-    }, 3000 )
+    }, 5000 )
 }
 
 const app = express()
