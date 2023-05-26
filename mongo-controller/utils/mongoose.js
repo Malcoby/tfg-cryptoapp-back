@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
 
-const URI = 'mongodb+srv://tfgcryptoproject:buZVEa9ZzKmGuNT5@cluster-cryptoapp.y6mqvt1.mongodb.net/CryptoApp?retryWrites=true&w=majority'
-
 export const connect = async () => {
 
     try {
