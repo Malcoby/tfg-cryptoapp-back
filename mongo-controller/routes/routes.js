@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getSymbols, saveSymbol, getUsers, saveUser } from '../controllers/db-controller.js'
+import { getSymbols, saveSymbol, getUsers, saveUser, addFavorite } from '../controllers/db-controller.js'
 
 const router = Router()
 
@@ -13,6 +13,11 @@ router.put('/saveSymbol', saveSymbol)
 router.get('/getUsers', getUsers)
 
 router.put('/saveUser', saveUser)
+
+
+router.put('/addFavorite', addFavorite)
+
+// router.delete('/deleteFavorite', deleteFavorite)
 
 
 

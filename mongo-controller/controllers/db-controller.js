@@ -64,46 +64,81 @@ export const saveUser = async (request, response) => {
         photo
     })
 
-    const users = await User.find()
-    if (users.length != 0) {
+    const filter = { email: `${email}` }
+    const user = await User.find(filter)
+    if (user.length != 0) {
 
-        let updated = false
-        users.forEach(userTemp => {
-            if (userTemp.email == email) {
-
-                const filter = { _id: `${userTemp._id}` }
-                const options = { upsert: true }
-                const userUpdated = {
-                    $set: {
-                        provider: `${provider}`,
-                        name: `${name}`,
-                        photo: `${photo}`
-                    }
-                }
-
-                User.updateOne(filter, userUpdated, options)
-                updated = true
-                console.log(userData)
-                response.json(userData)
-                response.end()
-                //response.json('Symbol updated')
+        const options = { upsert: true }
+        const userUpdated = {
+            $set: {
+                provider: `${provider}`,
+                name: `${name}`,
+                photo: `${photo}`
             }
-        })
-
-        if (updated == false) {
-
-            await userData.save()
-            console.log(userData)
-            response.json(userData)
-            response.end()
-            //response.json('Symbol added')
         }
+
+        await User.updateOne(filter, userUpdated, options)
+        console.log(userData)
+        console.log('Symbol updated')
+        response.json(userData)
+        response.end()
     } else {
 
         await userData.save()
         console.log(userData)
+        console.log('Symbol added')
         response.json(userData)
         response.end()
-        //response.json('Symbol added')
+    }
+}
+
+export const addFavorite = async (request, response) => {
+
+    const { email, favorite } = request.body
+
+    const filter = { email: `${email}` }
+    const user = await User.find(filter)
+    if (user.length != 0) {
+        console.log(user)
+        console.log(user.favorites)
+        let userFavorites = user.favorites
+        let exist = false
+        if (userFavorites != undefined) {
+
+            userFavorites.forEach(element => {
+                if (element === favorite) {
+                    exist = true
+                }
+            })
+        }
+        if (!exist) {
+
+            let longitud = 0
+            if (userFavorites != undefined) {
+
+                longitud = userFavorites.length
+                console.log(longitud)
+                userFavorites[longitud] = favorite
+            } else {
+                console.log(userFavorites)
+                console.log(longitud)
+                userFavorites = [ favorite ]
+            }
+            //userFavorites.add(favorite)
+        }
+        console.log(userFavorites)
+
+        const options = { upsert: true }
+        const userUpdated = {
+            $set: {
+                favorites: `${userFavorites}`
+            }
+        }
+
+        await User.updateOne(filter, userUpdated, options)
+        console.log(user)
+        console.log('Favorite added')
+        response.json(user)
+        response.end()
     }
 }
