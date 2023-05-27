@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import Symbol from '../models/symbol.js'
 import User from '../models/user.js'
 import { filterData, getSymbolAsObject } from '../utils/data-helper.js'
+import { HTTP_STATUS } from '../../constants.js'
 
 export const getSymbols = async (request, response) => {
     const symbols = await Symbol.find()
@@ -97,6 +98,11 @@ export const saveUser = async (request, response) => {
     }
 }
 
+/**
+ * 
+ * @param { import('express').Request } request 
+ * @param { import('express').Response } response 
+ */
 export const addFavorite = async (request, response) => {
 
     const { email, symbol } = request.body
@@ -124,4 +130,8 @@ export const addFavorite = async (request, response) => {
         
         response.end()
     }
+
+    response.statusCode = HTTP_STATUS.NOT_FOUND
+    response.send(`User doesn't exist`)
+    response.end()
 }
