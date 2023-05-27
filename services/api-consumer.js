@@ -17,5 +17,5 @@ async function request(method, endpoint) {
 }
 
 export function getSymbolsData() {
-    return request('GET', '/ticker/24hr')
+    return request('GET', '/ticker/24hr?type=MINI')
 }

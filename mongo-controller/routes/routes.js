@@ -1,17 +1,22 @@
 import { Router } from 'express'
-import { getSymbols, createDB, updateSymbols, getUsers, saveUser, addFavorite } from '../controllers/db-controller.js'
+import { 
+    getSymbols, 
+    createDB, 
+    updateDB, 
+    getUsers, 
+    saveUser, 
+    addFavorite 
+} from '../controllers/db-controller.js'
 
 const router = Router()
 
 router.get('/getSymbols', getSymbols)
 
-router.put('/updateSymbols', updateSymbols)
 router.put('/createDB', createDB)
+router.put('/updateDB', updateDB)
 
 router.get('/getUsers', getUsers)
-
 router.put('/saveUser', saveUser)
-
 
 router.put('/addFavorite', addFavorite)
 

@@ -12,7 +12,7 @@ export const createDB = async () => {
         xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.send(symbols)
 
-        xhr.onload = () => resolve(xhr.responseText)
+        xhr.onload = () => resolve(xhr.response)
         xhr.onerror = () => reject(xhr.status)
     })
 }
@@ -24,11 +24,11 @@ export const updateDB = async () => {
         
         const xhr = new XMLHttpRequest()
         
-        xhr.open('PUT', 'http://localhost:1818/updateSymbols')
+        xhr.open('PUT', 'http://localhost:1818/updateDB')
         xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.send(symbols)
 
-        xhr.onload = () => resolve(xhr.responseText)
+        xhr.onload = () => resolve(xhr.response)
         xhr.onerror = () => reject(xhr.status)
     })
 }

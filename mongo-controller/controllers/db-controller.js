@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import Symbol from '../models/symbol.js'
 import User from '../models/user.js'
 import { filterData, getSymbolAsObject } from '../utils/data-helper.js'
@@ -34,7 +33,7 @@ export const createDB = async (request, response) => {
     response.end()
 }
 
-export const updateSymbols = async (request, response) => {
+export const updateDB = async (request, response) => {
 
     console.time('update')
 
@@ -98,11 +97,6 @@ export const saveUser = async (request, response) => {
     }
 }
 
-/**
- * 
- * @param { import('express').Request } request 
- * @param { import('express').Response } response 
- */
 export const addFavorite = async (request, response) => {
 
     const { email, symbol } = request.body
