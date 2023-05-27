@@ -1,8 +1,7 @@
 import mongoose from 'mongoose'
 import Symbol from '../models/symbol.js'
 import User from '../models/user.js'
-
-let ids = null
+import { filterData, getSymbolAsObject } from '../utils/data-helper.js'
 
 export const getSymbols = async (request, response) => {
     const symbols = await Symbol.find()
@@ -13,46 +12,24 @@ export const getSymbols = async (request, response) => {
 
 export const createDB = async (request, response) => {
 
-    console.time()
+    console.time('creation')
     Symbol.collection.drop()
 
-    let symbols = request.body
-    symbols = symbols.filter(symbol => symbol.quoteVolume != 0)
+    let symbols = filterData(request.body)
 
     const bulk = Symbol.collection.initializeUnorderedBulkOp()
     symbols.forEach(element => {
-
-        const { symbol, priceChangePercent, lastPrice, volume, quoteVolume } = element
-
-        const symbolData = {
-            symbol,
-            priceChangePercent,
-            lastPrice,
-            volume,
-            quoteVolume
-        }
-        
-        bulk.insert(symbolData)
+        const symbol = getSymbolAsObject(element)
+        bulk.insert(symbol)
     })
+
     await bulk.execute()
 
-    const options = {
-        priceChangePercent: 0,
-        lastPrice: 0,
-        volume: 0,
-        quoteVolume: 0
-    }
+    console.time('index')
+    await Symbol.collection.createIndex({ symbol: 1 })
+    console.timeEnd('index')
 
-    ids = await Symbol.find(null, options)
-    ids = ids.map(newSymbol => {
-
-        const symbol = newSymbol.symbol
-        const _id = newSymbol._id
-
-        return { symbol, _id }
-    })
-
-    console.timeEnd()
+    console.timeEnd('creation')
     response.end()
 }
 
@@ -60,25 +37,12 @@ export const updateSymbols = async (request, response) => {
 
     console.time('update')
 
-    let symbols = request.body
-    symbols = symbols.filter(symbol => symbol.quoteVolume != 0)
+    let symbols = filterData(request.body)
 
     const bulk = Symbol.collection.initializeUnorderedBulkOp()
     symbols.forEach(element => {
-
-        const { symbol, priceChangePercent, lastPrice, volume, quoteVolume } = element
-        
-        const symbolData = {
-            symbol,
-            priceChangePercent,
-            lastPrice,
-            volume,
-            quoteVolume
-        }
-        
-        let _id = ids.find(idElement => idElement.symbol === element.symbol)._id
-
-        bulk.find({ _id }).replaceOne(symbolData)
+        const symbol = getSymbolAsObject(element)
+        bulk.find({ symbol: element.symbol }).replaceOne(symbol)
     })
 
     await bulk.execute()

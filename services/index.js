@@ -6,14 +6,14 @@ export const createDB = async () => {
     
     return new Promise((resolve, reject) => {
 
-        const petition_http = new XMLHttpRequest()
+        const xhr = new XMLHttpRequest()
         
-        petition_http.open('PUT', 'http://localhost:1818/createDB')
-        petition_http.setRequestHeader('Content-Type', 'application/json')
-        petition_http.send(symbols)
+        xhr.open('PUT', 'http://localhost:1818/createDB')
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.send(symbols)
 
-        petition_http.onload = () => resolve(petition_http.responseText)
-        petition_http.onerror = () => reject(petition_http.status)
+        xhr.onload = () => resolve(xhr.responseText)
+        xhr.onerror = () => reject(xhr.status)
     })
 }
 
@@ -22,13 +22,13 @@ export const updateDB = async () => {
 
     return new Promise((resolve, reject) => {
         
-        const petition_http = new XMLHttpRequest()
+        const xhr = new XMLHttpRequest()
         
-        petition_http.open('PUT', 'http://localhost:1818/updateSymbols')
-        petition_http.setRequestHeader('Content-Type', 'application/json')
-        petition_http.send(symbols)
+        xhr.open('PUT', 'http://localhost:1818/updateSymbols')
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.send(symbols)
 
-        petition_http.onload = () => resolve(petition_http.responseText)
-        petition_http.onerror = () => reject(petition_http.status)
+        xhr.onload = () => resolve(xhr.responseText)
+        xhr.onerror = () => reject(xhr.status)
     })
 }
