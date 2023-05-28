@@ -42,7 +42,7 @@ export const updateDB = async (request, response) => {
     const bulk = Symbol.collection.initializeUnorderedBulkOp()
     symbols.forEach(element => {
         const symbol = getSymbolAsObject(element)
-        bulk.find({ symbol: element.symbol }).replaceOne(symbol)
+        bulk.find({ symbol: element.symbol }).updateOne({ $set: symbol })
     })
 
     await bulk.execute()

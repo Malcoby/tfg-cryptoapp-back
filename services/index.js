@@ -1,34 +1,43 @@
+import Symbol from '../mongo-controller/models/symbol.js'
+
+import { filterData, getSymbolAsObject } from '../mongo-controller/utils/data-helper.js'
 import { getSymbolsData } from './api-consumer.js'
-import { XMLHttpRequest } from 'xmlhttprequest'
 
 export const createDB = async () => {
-    const symbols = await getSymbolsData()
-    
-    return new Promise((resolve, reject) => {
+    let symbols = await getSymbolsData()
 
-        const xhr = new XMLHttpRequest()
-        
-        xhr.open('PUT', 'http://localhost:1818/createDB')
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.send(symbols)
+    console.time('creation')
+    Symbol.collection.drop()
 
-        xhr.onload = () => resolve(xhr.response)
-        xhr.onerror = () => reject(xhr.status)
+    symbols = filterData(symbols)
+
+    const bulk = Symbol.collection.initializeUnorderedBulkOp()
+    symbols.forEach(element => {
+        const symbol = getSymbolAsObject(element)
+        bulk.insert(symbol)
     })
+
+    await bulk.execute()
+
+    console.time('index')
+    await Symbol.collection.createIndex({ symbol: 1 })
+    console.timeEnd('index')
+
+    console.timeEnd('creation')    
 }
 
 export const updateDB = async () => {
-    const symbols = await getSymbolsData()
-
-    return new Promise((resolve, reject) => {
+    let symbols = await getSymbolsData()
         
-        const xhr = new XMLHttpRequest()
-        
-        xhr.open('PUT', 'http://localhost:1818/updateDB')
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.send(symbols)
+    console.time('update')
+    symbols = filterData(symbols)
 
-        xhr.onload = () => resolve(xhr.response)
-        xhr.onerror = () => reject(xhr.status)
+    const bulk = Symbol.collection.initializeUnorderedBulkOp()
+    symbols.forEach(element => {
+        const symbol = getSymbolAsObject(element)
+        bulk.find({ symbol: element.symbol }).updateOne({ $set: symbol })
     })
+
+    await bulk.execute()
+    console.timeEnd('update')
 }
