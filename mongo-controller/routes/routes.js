@@ -1,30 +1,14 @@
 import { Router } from 'express'
-import { 
-    getSymbols, 
-    createDB, 
-    updateDB, 
-    getUsers, 
-    saveUser, 
-    addFavorite 
-} from '../controllers/db-controller.js'
+import { getSymbols } from '../controllers/db-controller.js'
+
+import userRoutes from './users.js'
+import subscriptionsRoutes from './subscriptions.js'
 
 const router = Router()
 
-router.get('/getSymbols', getSymbols)
+router.use('/users', userRoutes)
+router.use('/subscriptions', subscriptionsRoutes)
 
-router.put('/createDB', createDB)
-router.put('/updateDB', updateDB)
-
-router.get('/getUsers', getUsers)
-router.put('/saveUser', saveUser)
-
-router.put('/addFavorite', addFavorite)
-
-// router.delete('/deleteFavorite', deleteFavorite)
-
-router.get('/', (request, response) => {
-    response.send('Hola mundo!')
-    response.end()
-})
+router.get('/symbols', getSymbols)
 
 export default router

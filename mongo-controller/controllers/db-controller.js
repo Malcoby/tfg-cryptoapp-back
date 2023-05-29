@@ -4,7 +4,7 @@ import { filterData, getSymbolAsObject } from '../utils/data-helper.js'
 import { HTTP_STATUS } from '../../constants.js'
 
 export const getSymbols = async (request, response) => {
-    const symbols = await Symbol.find()
+    const symbols = await Symbol.find({}, { _id: 0 })
 
     response.json(symbols)
     response.end()
@@ -103,29 +103,48 @@ export const addFavorite = async (request, response) => {
 
     const filter = { email: `${email}` }
     const user = await User.findOne(filter)
+    response.contentType('json')
 
-    if (user) {
-        let userFavorites = user.favorites
-        const alreadyExists = userFavorites.includes(symbol)
-
-        if (!alreadyExists) {
-            userFavorites.push(symbol)
-            //userFavorites = [...userFavorites, symbol]
-
-            const userUpdated = {
-                $set: {
-                    favorites: userFavorites
-                }
-            }
-
-            await User.updateOne(filter, userUpdated)
-            response.send(`${symbol} added`)
-        }
-        
+    if (!user) {
+        response.statusCode = HTTP_STATUS.NOT_FOUND
+        response.send({ result: `User doesn't exist`})
         response.end()
+        return
+    }
+    
+    let favorites = user.favorites
+    const alreadySubscribed = favorites.includes(symbol)
+
+    if (alreadySubscribed) {
+        favorites = favorites.filter(favorite => favorite !== symbol)
+    } else {
+        favorites.push(symbol)
     }
 
-    response.statusCode = HTTP_STATUS.NOT_FOUND
-    response.send(`User doesn't exist`)
+    const userUpdated = {
+        $set: {
+            favorites
+        }
+    }
+
+    await User.updateOne(filter, userUpdated)
+    
+    response.end()
+}
+
+export const getUserSubscriptions = async (request, response) => {
+
+    const { email } = request.body
+    const user = await User.findOne({ email })
+
+    if (!user) {
+        response.statusCode = HTTP_STATUS.NOT_FOUND
+        response.end()
+        return
+    }
+    
+    const favorites = user.favorites
+    response.contentType('json')
+    response.json(favorites)
     response.end()
 }
