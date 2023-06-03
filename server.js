@@ -10,21 +10,23 @@ import { updateDB, createDB } from './services/index.js'
 import { DDBB_UPDATE_RATE } from './constants.js'
 
 dotenv.config()
+
 const app = express()
+const hostname = config.back.hostname
+const port = config.back.port
 
 app.use(cors())
 app.use(express.json({ limit: '2mb' }))
 app.use(routes)
 
 const main = async () => {
-
     let alreadyUpdating = false
 
     await connect()
     createDB()
 
-    app.listen(config.back.dev.port, config.back.dev.hostname)
-    console.info(`\n\n-- Server running at http://${config.back.dev.hostname}:${config.back.dev.port}\n`)
+    app.listen(port, hostname)
+    console.info(`\n-- Server running at http://${hostname}:${port}\n`)
     
     setInterval(async () => {
         if (alreadyUpdating) return

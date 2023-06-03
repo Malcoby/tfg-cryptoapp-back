@@ -5,8 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js",
-    "server": "node server.js"
+    "predev": "rm -r ./node_modules && npm i",
+    "dev": "NODE_ENV=dev nodemon --ignore src/ app.js",
+    "preserver": "rm -r ./node_modules && npm i --omit=dev",
+    "server": "NODE_ENV=prod node server.js"
   },
   "author": "Daniel Assenza, Mario Gozalo",
   "license": "ISC",

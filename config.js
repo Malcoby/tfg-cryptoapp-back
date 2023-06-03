@@ -1,23 +1,14 @@
-const config = {}
+import dotenv from 'dotenv'
+import path from 'path'
 
-config.api = {
-    dev: {
-        hostname: 'localhost',
-        port: 1717
-    }
-}
+dotenv.config({
+    path: path.resolve(`${process.env.NODE_ENV}.env`)
+})
 
-config.back = {
-    dev: {        
-        hostname: 'localhost',
-        port: 1818
-    }
-}
-
-config.front = {
-    dev: {        
-        hostname: 'localhost',
-        port: 1616
+const config = {
+    back: {
+        hostname: process.env.HOST,
+        port: process.env.PORT
     }
 }
 
