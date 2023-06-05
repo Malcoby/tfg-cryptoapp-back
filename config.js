@@ -7,6 +7,7 @@ dotenv.config({
 
 const config = {
     back: {
+        ddbbUri: process.env.MONGODB_URI,
         hostname: process.env.HOST,
         port: process.env.PORT
     }

@@ -1,4 +1,3 @@
-import * as dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
 
@@ -8,8 +7,6 @@ import routes from './mongo-controller/routes/routes.js'
 import { connect } from './mongo-controller/utils/mongoose.js'
 import { updateDB, createDB } from './services/index.js'
 import { DDBB_UPDATE_RATE } from './constants.js'
-
-dotenv.config()
 
 const app = express()
 const hostname = config.back.hostname
