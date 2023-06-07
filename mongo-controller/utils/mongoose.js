@@ -1,6 +1,9 @@
 import mongoose from 'mongoose'
 import config from '../../config.js'
 
+/**
+ * Inicia la conexión con la DB
+ */
 export const connect = async () => {
 
     try {

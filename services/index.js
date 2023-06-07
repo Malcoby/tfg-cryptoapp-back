@@ -4,6 +4,9 @@ import fs from 'fs'
 import { filterData, getSymbolAsObject } from '../mongo-controller/utils/data-helper.js'
 import { getSymbolsData } from './api-consumer.js'
 
+/**
+ * Genera un archivo json con todos los iconos, en base64, de las criptomonedas almacenadas en assets
+ */
 export const jsonFilePictures = async () => {
     let picturesData = new Array(0)
     const addToFile = (svg, file) => {
@@ -26,6 +29,9 @@ export const jsonFilePictures = async () => {
     })
 }
 
+/**
+ * Crea la DB con los primeros símbolos
+ */
 export const createDB = async () => {
     let symbols = await getSymbolsData()
 
@@ -49,6 +55,9 @@ export const createDB = async () => {
     console.timeEnd('creation')
 }
 
+/**
+ * Actualiza los datos de los símbolos de la DB
+ */
 export const updateDB = async () => {
     let symbols = await getSymbolsData()
 

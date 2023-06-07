@@ -16,6 +16,9 @@ app.use(cors())
 app.use(express.json({ limit: '2mb' }))
 app.use(routes)
 
+/**
+ * Función main del servidor
+ */
 const main = async () => {
     let alreadyUpdating = false
 

@@ -1,13 +1,13 @@
 /**
  * Filter all inactive binance symbols
- * @param { Array<JSON> } symbols 
+ * @param { Array<JSON> } symbols Array<JSON> representing symbols data
  */
 export const filterData = (symbols) => {
     return symbols.filter(symbol => symbol.quoteVolume != 0)
 }
 
 /**
- * Use the useful data of the symbol to create the object 
+ * Use the useful data of the symbol to create the object
  * used by the database
  * @param { JSON } symbol JSON representing symbol data
  */

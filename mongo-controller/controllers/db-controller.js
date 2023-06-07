@@ -2,9 +2,13 @@ import Symbol from '../models/symbol.js'
 import User from '../models/user.js'
 import fs from 'fs'
 
-import { filterData, getSymbolAsObject } from '../utils/data-helper.js'
 import { HTTP_STATUS } from '../../constants.js'
 
+/**
+ * Obtiene todos los símbolos de la DB y los envía como respuesta en formato json
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ */
 export const getSymbols = async (request, response) => {
     const symbols = await Symbol.find({}, { _id: 0 })
 
@@ -12,6 +16,11 @@ export const getSymbols = async (request, response) => {
     response.end()
 }
 
+/**
+ * Obtiene todos los iconos de las criptomonedas, en base64, de un archivo json y los envía como respuesta en formato json
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ */
 export const getPictures = async (request, response) => {
     const { coins } = request.body
 
@@ -28,53 +37,22 @@ export const getPictures = async (request, response) => {
     response.end()
 }
 
-export const createDB = async (request, response) => {
-
-    console.time('creation')
-    Symbol.collection.drop()
-
-    let symbols = filterData(request.body)
-
-    const bulk = Symbol.collection.initializeUnorderedBulkOp()
-    symbols.forEach(element => {
-        const symbol = getSymbolAsObject(element)
-        bulk.insert(symbol)
-    })
-
-    await bulk.execute()
-
-    console.time('index')
-    await Symbol.collection.createIndex({ symbol: 1 })
-    console.timeEnd('index')
-
-    console.timeEnd('creation')
-    response.end()
-}
-
-export const updateDB = async (request, response) => {
-
-    console.time('update')
-
-    let symbols = filterData(request.body)
-
-    const bulk = Symbol.collection.initializeUnorderedBulkOp()
-    symbols.forEach(element => {
-        const symbol = getSymbolAsObject(element)
-        bulk.find({ symbol: element.symbol }).updateOne({ $set: symbol })
-    })
-
-    await bulk.execute()
-    console.timeEnd('update')
-
-    response.end()
-}
-
+/**
+ * Obtiene todos los usuarios de la DB y los envía como respuesta en formato json
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ */
 export const getUsers = async (request, response) => {
 
     const users = await User.find()
     response.json(users)
 }
 
+/**
+ * Guarda un nuevo usuario en la DB y, si existe, lo actualiza. Envía como respuesta los datos del usuario en formato json
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ */
 export const saveUser = async (request, response) => {
 
     const { provider, name, email, photo, favorites, wallet } = request.body
@@ -116,7 +94,12 @@ export const saveUser = async (request, response) => {
     }
 }
 
-
+/**
+ * Obtiene los favoritos del usuario y los envía como respuesta en formato json
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ * @returns null
+ */
 export const getUserSubscriptions = async (request, response) => {
 
     const { email } = request.body
@@ -134,6 +117,12 @@ export const getUserSubscriptions = async (request, response) => {
     response.end()
 }
 
+/**
+ * Añade favoritos al usuario y, si existen, los borra de la DB
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ * @returns null
+ */
 export const addFavorite = async (request, response) => {
 
     const { email, symbol } = request.body
@@ -169,7 +158,12 @@ export const addFavorite = async (request, response) => {
     response.end()
 }
 
-
+/**
+ * Obtiene la billetera del usuario y la envía como respuesta en formato json
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ * @returns null
+ */
 export const getUserWallet = async (request, response) => {
 
     const { email } = request.body
@@ -187,6 +181,12 @@ export const getUserWallet = async (request, response) => {
     response.end()
 }
 
+/**
+ * Añade criptomonedas a la billetera del usuario y, si existen y su balance es 0.0, las borra de la DB
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ * @returns null
+ */
 export const addCoinToWallet = async (request, response) => {
 
     const { email, symbol, balance } = request.body
@@ -237,6 +237,12 @@ export const addCoinToWallet = async (request, response) => {
     response.end()
 }
 
+/**
+ * Modifica el balance de la DB de una criptomonedas existente en la billetera del usuario
+ * @param {Request} request objeto que representa la petición al servidor
+ * @param {Response} response objeto que representa la respuesta del servidor
+ * @returns null
+ */
 export const modifyCoinFromWallet = async (request, response) => {
 
     const { email, symbol, amount, lastPrice, deposit} = request.body
