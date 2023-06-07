@@ -5,7 +5,7 @@ import config from './config.js'
 import routes from './mongo-controller/routes/routes.js'
 
 import { connect } from './mongo-controller/utils/mongoose.js'
-import { updateDB, createDB } from './services/index.js'
+import { jsonFilePictures, createDB, updateDB } from './services/index.js'
 import { DDBB_UPDATE_RATE } from './constants.js'
 
 const app = express()
@@ -19,12 +19,13 @@ app.use(routes)
 const main = async () => {
     let alreadyUpdating = false
 
+    await jsonFilePictures()
     await connect()
     createDB()
 
     app.listen(port, hostname)
     console.info(`\n-- Server running at http://${hostname}:${port}\n`)
-    
+
     setInterval(async () => {
         if (alreadyUpdating) return
 

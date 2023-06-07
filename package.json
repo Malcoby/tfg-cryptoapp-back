@@ -5,8 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "predev:windows": "del /s /q .\\node_modules && npm install",
+    "dev:windows": "set \"NODE_ENV=dev\" && node server.js",
     "predev": "rm -r ./node_modules && npm i",
-    "dev": "NODE_ENV=dev nodemon --ignore src/ app.js",
+    "dev": "NODE_ENV=dev nodemon server.js",
     "preserver": "rm -r ./node_modules && npm i --omit=dev",
     "server": "NODE_ENV=prod node server.js"
   },

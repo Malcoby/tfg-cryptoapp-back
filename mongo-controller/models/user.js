@@ -19,6 +19,9 @@ const userSchema = mongoose.Schema({
     },
     favorites: {
         type: Array
+    },
+    Wallet: {
+        type: Array
     }
 })
 
